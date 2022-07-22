@@ -55,35 +55,38 @@ class _MyHomePageState extends State<MyHomePage> {
   String _coordinate = "";
 
   Future _incrementCounter() async {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    // setState(() {
+    //   // This call to setState tells the Flutter framework that something has
+    //   // changed in this State, which causes it to rerun the build method below
+    //   // so that the display can reflect the updated values. If we changed
+    //   // _counter without calling setState(), then the build method would not be
+    //   // called again, and so nothing would appear to happen.
+    //   _counter++;
+    // });
 
     //get geolocation
     bool serviceEnabled;
     LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-    }
-
-    permission = await Geolocator.requestPermission();
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
+    setState(() {
+      _coordinate = "Getting coordinate...";
+    });
     try {
+      // Test if location services are enabled.
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        await Geolocator.openLocationSettings();
+      }
+
+      permission = await Geolocator.requestPermission();
+
+      if (permission == LocationPermission.deniedForever) {
+        // Permissions are denied forever, handle appropriately.
+        return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      }
+
+      // When we reach here, permissions are granted and we can
+      // continue accessing the position of the device.
+
       final x = await Geolocator.getCurrentPosition();
 
       setState(() {
@@ -93,6 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
     } on Exception catch (e) {
       // TODO
       print(e);
+      setState(() {
+        _coordinate = "Failed";
+      });
     }
   }
 
